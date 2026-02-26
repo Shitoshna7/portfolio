@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+    <style>
+        body {
+            background: #121212;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .quiz-container {
+            background: #1E1E1E;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 0 20px rgba(0, 173, 181, 0.4);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #2C2C2C;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            background: #00ADB5;
+            color: black;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: #00ADB5;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2 id="question">Question text</h2>
+
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+
+const quizData = [
+    {
+        question: "What does HTML stand for?",
+        options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language"],
+        answer: 0
+    },
+    {
+        question: "Which language is used for styling?",
+        options: ["HTML", "CSS", "Python"],
+        answer: 1
+    },
+    {
+        question: "Which language adds interactivity?",
+        options: ["CSS", "JavaScript", "C++"],
+        answer: 1
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selected = null;
+
+function loadQuestion() {
+    document.getElementById("question").innerText = quizData[currentQuestion].question;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    quizData[currentQuestion].options.forEach((option, index) => {
+        const div = document.createElement("div");
+        div.classList.add("option");
+        div.innerText = option;
+        div.onclick = () => selectOption(index);
+        optionsDiv.appendChild(div);
+    });
+}
+
+function selectOption(index) {
+    selected = index;
+
+    const options = document.getElementById("options").children;
+
+    for (let i = 0; i < options.length; i++) {
+        options[i].classList.remove("selected");
+    }
+
+    options[index].classList.add("selected");
+}
+
+function nextQuestion() {
+    if (selected === quizData[currentQuestion].answer) {
+        score++;
+    }
+
+    selected = null;
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        document.querySelector(".quiz-container").innerHTML =
+            "<h2>Your Score: " + score + "/" + quizData.length + "</h2>";
+    }
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
